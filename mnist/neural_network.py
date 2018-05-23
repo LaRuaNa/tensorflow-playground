@@ -71,7 +71,11 @@ def nn_train(x):
                 epoch_loss += c
             epoch_errors.append(epoch_loss)
             print('epoch:', epoch +1, 'of', epochs, ' with loss: ', epoch_loss)
-        display_convergence(epoch_errors)
 
+        # TESTING 
+        correct_result = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+        accuracy = tf.reduce_mean(tf.cast(correct_result, 'float'))
+        print('Accuracy: ', accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
+        
 if __name__ == '__main__':
     nn_train(x)
