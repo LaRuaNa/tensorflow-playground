@@ -12,13 +12,13 @@ train_size = mnist.train.num_examples
 test_size = mnist.test.num_examples
 
 epochs = 10
-batch_size = 256
+batch_size = 32
 classes = 10
 features = 784
-layer_nodes = [features, 100, 100, 100, classes]
+layer_nodes = [features, 400, 100, 400, classes]
 stddev = 0.100
 bias_weight_init = 0.100
-learning_rate = 1e-4
+learning_rate = 5e-4
 epoch_errors = []
 
 x = tf.placeholder(dtype=tf.float32, shape=[None, features], name='x')
@@ -56,7 +56,7 @@ def nn_model(x):
 def nn_train(x):
     pred = nn_model(x)
     pred = tf.identity(pred)
-    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=pred, labels=y))
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
     with tf.Session() as sess:
@@ -76,6 +76,6 @@ def nn_train(x):
         correct_result = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_result, 'float'))
         print('Accuracy: ', accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
-        
+
 if __name__ == '__main__':
     nn_train(x)
