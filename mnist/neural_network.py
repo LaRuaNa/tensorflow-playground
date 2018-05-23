@@ -6,6 +6,7 @@ import os
 from plotting import *
 
 data_path = './data/'
+model_path = './model'
 
 mnist = input_data.read_data_sets(data_path, one_hot=True)
 train_size = mnist.train.num_examples
@@ -60,6 +61,7 @@ def nn_train(x):
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
     with tf.Session() as sess:
+        saver = tf.train.Saver()
         sess.run(tf.global_variables_initializer())
 
         for epoch in range(epochs):
@@ -77,5 +79,7 @@ def nn_train(x):
         accuracy = tf.reduce_mean(tf.cast(correct_result, 'float'))
         print('Accuracy: ', accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
 
+        save_path = saver.save(sess, model_path + '/model.ckpt')
+        print('model saved in file: ', model_path)
 if __name__ == '__main__':
     nn_train(x)
